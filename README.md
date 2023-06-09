@@ -1,24 +1,24 @@
-# Projeto de Computação gráfica
+# Projeto de Computação Gráfica
 
-## Alunos:
-* Igor Freire
-* Gabriel Spencer
-* Raí Soares
-* Rodrigo Cavalcanti
-* Talia Flor
+Projeto de Processing para a cadeira de Computação Gráfica 2023.1 da UNICAP. O projeto consiste em uma cena com vários elementos interativos através do mouse e teclado, bem como elementos 2D e 3D.
 
-Este é um repositório de código para um simples sketch de animação criado usando a linguagem Processing. O sketch exibe uma cena com uma casa, uma pessoa, uma lua, estrelas e um arco-íris. O usuário pode controlar o movimento da pessoa usando as teclas de seta esquerda e direita.
+<div style="width: 500px; height: 375px; margin: auto;">
+
+![Imagem da tela do projeto](sample.png)
+
+</div>
 
 ## Recursos
 
-- Céu com cor personalizável
-- Grama com cor personalizável
-- Lua com cor e efeitos de iluminação personalizáveis
-- Estrelas com posição e cor personalizáveis
-- Arco-íris com esquema de cores personalizável
-- Casa com cores personalizáveis para as paredes, o telhado, a porta e a maçaneta
-- Pessoa com cor e cor dos olhos personalizáveis
-- Controle interativo de movimento para a pessoa usando as teclas de seta
+- Cores personalizáveis
+- Velocidade do personagem personalizável
+- Modos 'colorido' e 'normal' para o arco-íris
+
+## Uso
+
+- Use as teclas de seta esquerda e direita para mover a pessoa na cena.
+- A tecla 'g' começa a fazer a estrela girar e a 'p' a faz parar
+- Mova o mouse e veja a luz da lua e os olhos do personagem o seguindo
 
 ## Instalação
 
@@ -27,35 +27,34 @@ Este é um repositório de código para um simples sketch de animação criado u
 3. Abra o código no Processing.
 4. Execute o sketch clicando no botão "Play" ou pressionando Ctrl+R (Cmd+R no Mac).
 
-## Uso
-
-- Use as teclas de seta esquerda e direita para mover a pessoa na cena.
-- Sinta-se à vontade para personalizar as cores e posições dos vários elementos no código para criar sua própria animação única.
-
 ## Explicação do Código
 
-O código consiste em várias classes que representam diferentes elementos na animação:
+O código consiste em várias classes e métodos que representam diferentes elementos da animação e são responsáveis por desenha-los e animá-los. São elas:
 
-- A classe `Rainbow` lida com o desenho do arco-íris com cores personalizáveis.
-- A classe `House` representa a casa e permite a personalização das cores das paredes, do telhado, da porta e da maçaneta.
-- A classe `Star` cria estrelas com posições e cores personalizáveis e gerencia sua rotação.
-- A classe `Person` representa a pessoa na cena com cores personalizáveis para o corpo e os olhos.
-- A classe `Eye` lida com o desenho dos olhos da pessoa e seu movimento com base na posição do mouse.
+- Métodos:
+  - drawGrass
+  - drawMoon
+- Classes:
+  - House
+  - Person
+    - Eye
+  - Star
+  - Rainbow
 
-Na função `setup()`, o sketch inicializa o tamanho do canvas e cria instâncias das várias classes. A função `draw()` é responsável por renderizar a animação no canvas, incluindo o céu, a grama, a lua, a casa, a pessoa, as estrelas e o arco-íris. A função `keyPressed()` permite que o usuário controle o movimento da pessoa usando as teclas de seta.
+### Curiosidades
 
-## Personalização
+O arco-íris está sendo desenhado utilizando uma curva de Bézier, sendo caracterizada por seus pontos de controle. É passado na função os pontos iniciais e finais da curva, que devem ser atingidos, como os primeiros e últimos parâmetros, respectivamente. Os pontos do meio não são atingidos, mas servem para controlar o formato da curva.
 
-Você pode personalizar vários aspectos da animação modificando os valores no código:
+<div style="width: 500px; height: 300px; margin: auto;">
 
-- Altere os valores das variáveis de cor para personalizar as cores do céu, da grama, da lua, das estrelas, das paredes da casa, do telhado da casa, da porta da casa, da maçaneta da casa, da pessoa e dos olhos da pessoa.
-- Ajuste a posição das estrelas modificando as variáveis `STAR_X` e `STAR_Y`.
-- Ative ou desative o efeito colorido do arco-íris alterando o valor da variável `RAINBOW_COLORFUL`.
-- Personalize a posição e o tamanho da pessoa modificando as variáveis `personX` e `PERSON_SPEED`.
-- Experimente diferentes valores e funcionalidades para criar sua própria animação única.
+![Exemplo de uma curva de Bézier cúbica](bezier-curve.svg)
 
-Sinta-se à vontade para explorar o código e fazer modificações de acordo com suas preferências.
+</div>
 
-## Contribuições
+## Alunos
 
-Contribuições para este projeto de animação são bem-vindas. Se encontrar algum problema ou quiser sugerir melhorias, sinta-se à vontade para enviar um pull request ou abrir uma issue.
+- Igor Freire
+- Gabriel Spencer
+- Raí Soares
+- Rodrigo Cavalcanti
+- Talia Flor

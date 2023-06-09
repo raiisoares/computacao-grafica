@@ -24,9 +24,6 @@ Rainbow rainbow;
 Person person;
 
 
-float personX = 100;
-
-
 
 // -------------------------------------------------------------------------------
 
@@ -146,7 +143,7 @@ class House {
   
   void updateAndDraw(float personX) {
     pushMatrix();
-    float scaleFactor = map(personX, 0, this.x, 0.98, 1.1);
+    float scaleFactor = map(personX, 0, this.x, 1.0, 1.1);
     scale(scaleFactor);
     draw();
     popMatrix();
