@@ -13,7 +13,7 @@ int HOUSE_ROOF_COLOR = #ff7300;
 int HOUSE_DOOR_COLOR = #db5400;
 int HOUSE_DOORNOB_COLOR = #D0C611;
 
-float PERSON_SPEED = 12;
+float PERSON_SPEED = 7;
 int PERSON_COLOR = #A468E4;
 int PERSON_EYE_COLOR = #99CC00;
 
@@ -37,7 +37,7 @@ void setup() {
   
   rainbow = new Rainbow(RAINBOW_COLORFUL);
   star = new Star(STAR_X, STAR_Y, STAR_COLOR);
-  person = new Person(PERSON_COLOR, PERSON_EYE_COLOR);
+  person = new Person(PERSON_SPEED, PERSON_COLOR, PERSON_EYE_COLOR);
   house = new House(HOUSE_WALL_COLOR, HOUSE_ROOF_COLOR, HOUSE_DOOR_COLOR, HOUSE_DOORNOB_COLOR);
 }
 
@@ -47,19 +47,11 @@ void draw() {
   drawGrass(GRASS_COLOR);
   drawMoon(MOON_COLOR);
   
-  house.updateAndDraw(personX);
-  person.updateAndDraw(personX);
+  person.updateAndDraw();
+  house.updateAndDraw(person.x);
   
   star.updateAndDraw();
   rainbow.updateAndDraw();
-}
-
-void keyPressed() {
-  if (keyCode == LEFT) {
-    personX -= PERSON_SPEED;
-  } else if (keyCode == RIGHT) {
-    personX += PERSON_SPEED;
-  }
 }
 
 
@@ -246,29 +238,45 @@ class Star {
 }
 
 class Person {
+   float speed;
    int colour;
+   
+   float x = 0;
    
    Eye leftEye, rightEye;
    
-   Person(int colour, int eyeColor) {
+   Person(float speed, int colour, int eyeColor) {
+     this.speed = speed;
      this.colour = colour;
      
      this.leftEye = new Eye(100, 545, 25, eyeColor);
      this.rightEye = new Eye(130, 545, 25, eyeColor); 
    }
   
-  void updateAndDraw(float addX) {
+  void updateAndDraw() {
+    if (keyPressed) {
+      if (keyCode == LEFT) {
+        this.x -= this.speed;
+      } else if (keyCode == RIGHT) {
+        this.x += this.speed;
+      }
+    }
+    
+    draw();
+  }
+  
+  private void draw() {
     fill(this.colour);
-    rect(100 + addX, 575, 30,100);      // body
-    ellipse(115 + addX, 545, 60,60);    // head
+    rect(100 + this.x, 575, 30,100);      // body
+    ellipse(115 + this.x, 545, 60,60);    // head
     
     // legs
-    line(100 + addX, 675, 90 + addX, 700);
-    line(130 + addX, 675, 140 + addX, 700); 
+    line(100 + this.x, 675, 90 + this.x, 700);
+    line(130 + this.x, 675, 140 + this.x, 700); 
     
     // eyes
-    leftEye.updateAndDraw(mouseX, mouseY, addX);
-    rightEye.updateAndDraw(mouseX, mouseY, addX);
+    leftEye.updateAndDraw(mouseX, mouseY, this.x);
+    rightEye.updateAndDraw(mouseX, mouseY, this.x); 
   }
   
 }
