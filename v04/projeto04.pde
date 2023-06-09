@@ -1,115 +1,82 @@
-House house = new House();
-Star s1,s2;
-Eye leftEye, rightEye;
+int SKY_COLOR = #0A65C6;
+int GRASS_COLOR = #3BA439;
+int MOON_COLOR = #FFFFFF;
 
-float cycleX = 0;
-float houseLimit = 650;
+boolean RAINBOW_COLORFUL = false;
+
+float STAR_X = 75;
+float STAR_Y = 75;
+int STAR_COLOR = #E2D811;
+
+int HOUSE_WALL_COLOR = #ffffff;
+int HOUSE_ROOF_COLOR = #ff7300;
+int HOUSE_DOOR_COLOR = #db5400;
+int HOUSE_DOORNOB_COLOR = #D0C611;
+
+float PERSON_SPEED = 12;
+int PERSON_COLOR = #A468E4;
+int PERSON_EYE_COLOR = #99CC00;
+
+
+Star star;
+House house;
+Rainbow rainbow;
+Person person;
+
 
 float personX = 100;
-float personY = 575;
 
-float scaleValue = 1.0;
-float scaleSpeed = 0.0002;
 
-boolean retorno = false;
+
+// -------------------------------------------------------------------------------
+
+
 
 void setup() {
   size(1200, 900, P3D);
-  s1 = new Star();
-  leftEye = new Eye(100, 545, 25);
-  rightEye = new Eye(130, 545, 25); 
+  
+  rainbow = new Rainbow(RAINBOW_COLORFUL);
+  star = new Star(STAR_X, STAR_Y, STAR_COLOR);
+  person = new Person(PERSON_COLOR, PERSON_EYE_COLOR);
+  house = new House(HOUSE_WALL_COLOR, HOUSE_ROOF_COLOR, HOUSE_DOOR_COLOR, HOUSE_DOORNOB_COLOR);
 }
 
 void draw() {
-  background(0, 22, 189);
-  s1.displayStar();
-
-  person();
-  drawArco();
-  leftEye.update(mouseX, mouseY);
-  rightEye.update(mouseX, mouseY);
+  background(SKY_COLOR);
   
-  leftEye.display(personX);
-  rightEye.display(personX);
+  drawGrass(GRASS_COLOR);
+  drawMoon(MOON_COLOR);
   
-  drawSun();
-  drawGrass();
+  house.updateAndDraw(personX);
+  person.updateAndDraw(personX);
   
-  pushMatrix(); // adiciona o pushMatrix antes do scale
-  scale(scaleValue); // escala o objeto
-  house.drawHouse();
-  popMatrix(); // adiciona o popMatrix depois do scale
-  
-  // Calcula a distância entre personX e cycleX
-  float distance = abs(personX - cycleX);
-  
-  // Define o fator de escala com base na distância
-  float scaleFactor = map(distance, 0, houseLimit, 1.0, 1.1);
-  
-  // Atualiza o valor de escala
-  scaleValue = scaleFactor;
-  
+  star.updateAndDraw();
+  rainbow.updateAndDraw();
 }
 
-class Star {
-PShape group;
- Star() {
-  group = createShape(GROUP);
-  
-  PShape star = createShape();
-  star.beginShape();
-  star.fill(230, 195, 0);
-  star.stroke(255);
-  star.vertex(0+80, -50+80);
-  star.vertex(14+80, -20+80);
-  star.vertex(47+80, -15+80);
-  star.vertex(23+80, 7+80);
-  star.vertex(29+80, 40+80);
-  star.vertex(0+80, 25+80);
-  star.vertex(-29+80, 40+80);
-  star.vertex(-23+80, 7+80);
-  star.vertex(-47+80, -15+80);
-  star.vertex(-14+80, -20+80);
-  star.endShape(CLOSE);
-  group.addChild(star);
-}
-  void displayStar() {
-
-  PShape star = group.getChild(0);
-  if (keyPressed) {
-    if (key == 'p') {
-  star.rotate(0);
-    }
-  } else if (key == 'g') {
-  star.rotate(0.02);
+void keyPressed() {
+  if (keyCode == LEFT) {
+    personX -= PERSON_SPEED;
+  } else if (keyCode == RIGHT) {
+    personX += PERSON_SPEED;
   }
-  
-  shape(group);
-  }
-  
 }
 
-void drawArco(){
-    noFill();
-    float minValue = 0.0;
-    float maxValue = 300.0;
-    float r1 = random(minValue, maxValue);
-    float r2 = random(minValue, maxValue);
-    float r3 = random(minValue, maxValue);
 
-  for (int i = 0; i < 200; i += 20) {
 
-    // Cria uma cor com base no índice multiplicado por 5
-    color c = color(r1, r2, r3);  // Define a cor como vermelho puro
-    stroke(c); // Define a cor do traço como a cor criada
-    bezier(mouseX-(i/2.0), mouseY+i, 410, 20, 440, 300, 0-(i/16.0), 300+(i/8.0));
-  }
+// -------------------------------------------------------------------------------
+
+
+
+void drawGrass(int colour) {
+  noStroke();
+  fill(colour);
+  rect(0, 700, 1200, 200);
   stroke(0);
 }
 
-
-void drawSun() {
-  fill(#FFFFFF);
+void drawMoon(int colour) {
+  fill(colour);
   noStroke(); 
   pushMatrix();
   float dirY = (mouseY / float(height) - 0.5) * 2;
@@ -121,73 +88,221 @@ void drawSun() {
   stroke(0);
 }
 
-void drawGrass() {
-  fill(14, 214, 0);
-  rect(0, 700, 1200, 200);
+
+
+// -------------------------------------------------------------------------------
+
+
+
+class Rainbow {
+  boolean colorful;
+  
+  int[] colors = {
+    #9400D3,        // Violet
+    #4B0082,        // Indigo
+    #0000FF,        // Blue
+    #00FF00,        // Green
+    #FFFF00,        // Yellow
+    #FF7F00,        // Orange
+    #FF0000          // Red
+  };
+  
+  Rainbow(boolean colorful) {
+    this.colorful = colorful;
+  }
+  
+  void updateAndDraw() {
+    noFill();
+    
+    int count = 0;
+    
+    float minValue = 0.0;
+    float maxValue = 300.0;
+    float r1 = random(minValue, maxValue);
+    float r2 = random(minValue, maxValue);
+    float r3 = random(minValue, maxValue);
+
+    for (int i = 0; i < 490; i += 70) {
+      if (this.colorful) {
+        stroke(color(r1, r2, r3));
+      } else {
+        stroke(colors[count]);
+      }
+      bezier(mouseX-(i/2.0), mouseY+i, 410, 20, 440, 300, 0-(i/16.0), 300+(i/8.0));
+      count++;
+    }
+    
+   stroke(0);
+  }
+  
 }
 
 class House {
-  void drawHouse(){
-  fill(#FFFFFF);
-quad(800, 450, 1100, 450, 1100, 700, 800, 700);
-  fill(255, 115, 0);
-  triangle(770, 450, 950, 250, 1130, 450);
-  fill(219, 84, 0);
-rect(825, 500, 90, 200);
-  fill(0, 229, 255);
-quad(950, 525, 1075, 525, 1075, 625, 950, 625);
-  fill(219, 84, 0);
-rect(950, 570, 125, 10);
-rect(1005, 525, 10, 100);
-  fill(255, 247, 0);
-  circle(895, 600, 20);
+ float x = 800;
   
+  int wallColor;
+  int roofColor;
+  int doorColor;
+  int doornobColor;
+  
+  House(int wallColor, int roofColor, int doorColor, int doornobColor) {
+     this.wallColor = wallColor; 
+     this.roofColor = roofColor; 
+     this.doorColor = doorColor;
+     this.doornobColor = doornobColor;
   }
-}
-
-void person() {
-  fill(255, 0, 0); 
-  rect(100 + personX, 575, 30,100);
-  ellipse(115 + personX, 545, 60,60);
-  fill(#FFFFFF);
-  //ellipse(100 + personX, 545, 16,32);
-  //ellipse(130 + personX, 545, 16,32);
-  line(100 + personX, 675, 90 + personX, 700);
-  line(130 + personX, 675, 140 + personX,700); 
-}
-
-void keyPressed() {
-  if (keyCode == LEFT) {
-    personX -= 10;  // Mover para a esquerda
-  } else if (keyCode == RIGHT) {
-    personX += 10;  // Mover para a direita
+  
+  void updateAndDraw(float personX) {
+    pushMatrix();
+    float scaleFactor = map(personX, 0, this.x, 0.98, 1.1);
+    scale(scaleFactor);
+    draw();
+    popMatrix();
   }
+  
+  private void draw() {
+    // wall
+    fill(this.wallColor);
+    rect(this.x, 450, 300, 250);
+    
+    // roof
+    fill(this.roofColor);
+    triangle(770, 450, 950, 250, 1130, 450);
+    
+    // door
+    fill(this.doorColor);
+    rect(825, 500, 90, 200);
+    
+    // doornob
+    fill(this.doornobColor);
+    circle(895, 600, 20);
+    
+    // window
+    fill(#C7BCD6);
+    rect(950, 525, 125, 100);
+    
+    // window frame
+    fill(this.doorColor);
+    rect(950, 570, 125, 10);
+    rect(1005, 525, 10, 100);
+  }
+  
 }
 
+class Star {
+  float x;
+  float y;
+  int colour;
+  
+  float rotate = 0;
+  PShape starGroup = createShape(GROUP);
+  
+  
+  Star(float x, float y, int colour) {
+    this.x = x;
+    this.y = y;
+    this.colour = colour;
+    
+    draw(this.x, this.y, 30, 70, 5, this.colour);
+  }
+  
+  void updateAndDraw() {
+    PShape star = starGroup.getChild(0);
+    
+    if (keyPressed) {
+      if (key == 'p') {
+        this.rotate = 0;
+      } else if (key == 'g') {
+        this.rotate = 0.05;
+      }
+    }
+    star.rotate(this.rotate);
+    
+    shape(starGroup);
+  }
+
+  private void draw(float x, float y, float radius1, float radius2, int npoints, int colour) {
+    PShape star = createShape();
+    
+    float angle = TWO_PI / npoints;
+    float halfAngle = angle / 2.0;
+    star.beginShape();
+    star.noStroke();
+    star.fill(colour);
+    for (float a = 0; a < TWO_PI; a += angle) {
+      float sx = x + cos(a) * radius2;
+      float sy = y + sin(a) * radius2;
+      star.vertex(sx, sy);
+      sx = x + cos(a + halfAngle) * radius1;
+      sy = y + sin(a + halfAngle) * radius1;
+      star.vertex(sx, sy);
+    }
+    star.stroke(0);
+    star.endShape(CLOSE);
+
+    starGroup.addChild(star);
+  }
+  
+}
+
+class Person {
+   int colour;
+   
+   Eye leftEye, rightEye;
+   
+   Person(int colour, int eyeColor) {
+     this.colour = colour;
+     
+     this.leftEye = new Eye(100, 545, 25, eyeColor);
+     this.rightEye = new Eye(130, 545, 25, eyeColor); 
+   }
+  
+  void updateAndDraw(float addX) {
+    fill(this.colour);
+    rect(100 + addX, 575, 30,100);      // body
+    ellipse(115 + addX, 545, 60,60);    // head
+    
+    // legs
+    line(100 + addX, 675, 90 + addX, 700);
+    line(130 + addX, 675, 140 + addX, 700); 
+    
+    // eyes
+    leftEye.updateAndDraw(mouseX, mouseY, addX);
+    rightEye.updateAndDraw(mouseX, mouseY, addX);
+  }
+  
+}
 
 class Eye {
   float x, y;
   float size;
-  float angle = 0.0;
+  int colour;
   
-  Eye(float x, float y, float size) {
+  Eye(float x, float y, float size, int colour) {
     this.x = x;
     this.y = y;
     this.size = size;
+    this.colour = colour;
  }
 
-  void update(float mx, float my) {
-    angle = atan2(my-y, mx-x);
+  void updateAndDraw(float mx, float my, float posX) {
+    float angle = atan2(my-y, mx-x);
+    draw(angle, posX);
   }
   
-  void display(float posX) {
+  private void draw(float angle, float posX) {
     pushMatrix();
-    translate(x+ posX, y);
+    translate(x + posX, y);
     fill(255);
-    ellipse(0 , 0, size, size);
+    ellipse(0 , 0, this.size, this.size);
     rotate(angle);
-    fill(153, 204, 0);
-    ellipse(size/4, 0, size/2, size/2);
+    fill(this.colour);
+    ellipse(this.size/4, 0, this.size/2, this.size/2);
     popMatrix();
   }
+  
 }
+
+
+
+// -------------------------------------------------------------------------------
